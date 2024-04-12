@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triángulo Neon</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .neon-text {
+            color: #fff;
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #0ff, 0 0 70px #0ff, 0 0 80px #0ff, 0 0 100px #0ff, 0 0 150px #0ff;
+        }
+        input {
+            padding: 10px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0ff;
+            color: #000;
+            cursor: pointer;
+            font-weight: bold;
+            outline: none;
+        }
+        button:hover {
+            background-color: #00f;
+        }
+        #result-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="neon-text">Triángulos</h1>
+
+    <h2>Ingrese las coordenadas de los puntos:</h2>
+    <input type="number" id="x1" placeholder="x1" />
+    <input type="number" id="y1" placeholder="y1" />
+    <br>
+    <input type="number" id="x2" placeholder="x2" />
+    <input type="number" id="y2" placeholder="y2" />
+    <br>
+    <input type="number" id="x3" placeholder="x3" />
+    <input type="number" id="y3" placeholder="y3" />
+    <br>
+    <button onclick="calculate()">Calcular</button>
+
+    <div id="result-container" class="neon-text"></div>
+
+    <script>
+        function distanciaEntrePuntos(x1, y1, x2, y2) {
+            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        }
+
+        function tipoDeTriangulo(x1, y1, x2, y2, x3, y3) {
+            let lado1 = distanciaEntrePuntos(x1, y1, x2, y2);
+            let lado2 = distanciaEntrePuntos(x2, y2, x3, y3);
+            let lado3 = distanciaEntrePuntos(x3, y3, x1, y1);
+
+            if (lado1 === lado2 && lado2 === lado3) {
+                return "Equilátero";
+            } else if (lado1 === lado2 || lado2 === lado3 || lado3 === lado1) {
+                return "Isósceles";
+            } else {
+                return "Escaleno";
+            }
+        }
+
+        function perimetro(x1, y1, x2, y2, x3, y3) {
+            let lado1 = distanciaEntrePuntos(x1, y1, x2, y2);
+            let lado2 = distanciaEntrePuntos(x2, y2, x3, y3);
+            let lado3 = distanciaEntrePuntos(x3, y3, x1, y1);
+
+            return lado1 + lado2 + lado3;
+        }
+
+        function area(x1, y1, x2, y2, x3, y3) {
+            let lado1 = distanciaEntrePuntos(x1, y1, x2, y2);
+            let lado2 = distanciaEntrePuntos(x2, y2, x3, y3);
+            let lado3 = distanciaEntrePuntos(x3, y3, x1, y1);
+
+            let s = (lado1 + lado2 + lado3) / 2;
+            return Math.sqrt(s * (s - lado1) * (s - lado2) * (s - lado3));
+        }
+
+        function angulos(x1, y1, x2, y2, x3, y3) {
+            let lado1 = distanciaEntrePuntos(x1, y1, x2, y2);
+            let lado2 = distanciaEntrePuntos(x2, y2, x3, y3);
+            let lado3 = distanciaEntrePuntos(x3, y3, x1, y1);
+
+            let a = Math.acos((lado2 * lado2 + lado3 * lado3 - lado1 * lado1) / (2 * lado2 * lado3));
+            let b = Math.acos((lado3 * lado3 + lado1 * lado1 - lado2 * lado2) / (2 * lado3 * lado1));
+            let c = Math.acos((lado1 * lado1 + lado2 * lado2 - lado3 * lado3) / (2 * lado1 * lado2));
+
+            return [a * (180 / Math.PI), b * (180 / Math.PI), c * (180 / Math.PI)];
+        }
+
+        function calculate() {
+            let x1 = parseFloat(document.getElementById('x1').value);
+            let y1 = parseFloat(document.getElementById('y1').value);
+            let x2 = parseFloat(document.getElementById('x2').value);
+            let y2 = parseFloat(document.getElementById('y2').value);
+            let x3 = parseFloat(document.getElementById('x3').value);
+            let y3 = parseFloat(document.getElementById('y3').value);
+
+            let tipo = tipoDeTriangulo(x1, y1, x2, y2, x3, y3);
+            let perimeter = perimetro(x1, y1, x2, y2, x3, y3);
+            let triangleArea = area(x1, y1, x2, y2, x3, y3);
+            let anglesArray = angulos(x1, y1, x2, y2, x3, y3);
+
+            let resultContainer = document.getElementById('result-container');
+            resultContainer.innerHTML = `
+                <p>Tipo de triángulo: ${tipo}</p>
+                <p>Perímetro: ${perimeter}</p>
+                <p>Área: ${triangleArea}</p>
+                <p>Ángulos: ${anglesArray[0]}, ${anglesArray[1]}, ${anglesArray[2]}</p>
+            `;
+        }
+
+    </script>
+</body>
+</html>
+
+
